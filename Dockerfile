@@ -8,8 +8,5 @@ WORKDIR /code
 COPY requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-# Copiar el resto de tu código de la aplicación
-COPY ./app /code/app
-
 # Comando para ejecutar la aplicación usando Uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
