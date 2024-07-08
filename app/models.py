@@ -26,7 +26,7 @@ class Usuario(Base):
     id_usuario = Column(Integer, primary_key=True, index=True, autoincrement=True)
     id_rol = Column(Integer, ForeignKey('rol.id_rol'))
     username_usuario = Column(String(50))
-    clave_usuario = Column(String(50))
+    clave_usuario = Column(String(100))
     email_usuario = Column(String(100))
 
     rol = relationship("Rol", back_populates="usuarios")

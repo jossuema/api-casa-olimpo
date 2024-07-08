@@ -33,7 +33,7 @@ class Cliente(ClienteBase):
 class UsuarioBase(BaseModel):
     id_rol: Optional[int]
     username_usuario: Optional[str] = Field(None, max_length=50)
-    clave_usuario: Optional[str] = Field(None, max_length=50)
+    clave_usuario: Optional[str] = Field(None, max_length=100)
     email_usuario: Optional[EmailStr]
 
 class UsuarioCreate(UsuarioBase):
@@ -50,6 +50,7 @@ class Usuario(UsuarioBase):
 
     class Config:
         orm_mode = True
+        exclude = {'clave_usuario'}
 
 # Esquema de Rol
 class RolBase(BaseModel):
@@ -194,3 +195,10 @@ class DetalleVenta(DetalleVentaBase):
 
     class Config:
         orm_mode = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
