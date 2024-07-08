@@ -76,7 +76,7 @@ class Marca(Base):
 class Prenda(Base):
     __tablename__ = 'prenda'
     id_prenda = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    id_categoria = Column(Integer, ForeignKey('categoria.id_cat'), nullable=False)
+    id_categoria = Column(Integer, ForeignKey('categoria.id_categoria'), nullable=False)
     id_marca = Column(Integer, ForeignKey('marca.id_marca'), nullable=False)
     nombre_prenda = Column(String(100))
     descripcion_prenda = Column(String(250))
