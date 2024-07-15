@@ -5,6 +5,54 @@ from typing import Optional, List
 from datetime import date
 from decimal import Decimal
 
+# Esquema de Rol
+class RolBase(BaseModel):
+    nombre_rol: Optional[str] = Field(None, max_length=50)
+    descripcion_rol: Optional[str] = Field(None, max_length=255)
+
+class RolCreate(RolBase):
+    pass
+
+class RolUpdate(RolBase):
+    pass
+
+class Rol(RolBase):
+    id_rol: int
+
+    class Config:
+        orm_mode = True
+
+# Esquema de Usuario
+class UsuarioBase(BaseModel):
+    id_rol: Optional[int]
+    username_usuario: Optional[str] = Field(None, max_length=50)
+    clave_usuario: str = Field(None, max_length=200)
+    email_usuario: Optional[EmailStr]
+
+class UsuarioCreate(UsuarioBase):
+    id_rol: int
+    username_usuario: str
+    clave_usuario: str
+    email_usuario: EmailStr
+
+class UsuarioUpdate(UsuarioBase):
+    pass
+
+class UsuarioResponse(UsuarioBase):
+    id_usuario: int
+    rol: Rol
+
+    class Config:
+        orm_mode = True
+        exclude = {'clave_usuario'}
+
+class Usuario(UsuarioBase):
+    id_usuario: int
+
+    class Config:
+        orm_mode = True
+        exclude = {'clave_usuario'}
+
 # Esquema de Cliente
 class ClienteBase(BaseModel):
     id_usuario: int
@@ -25,46 +73,6 @@ class ClienteUpdate(ClienteBase):
 
 class Cliente(ClienteBase):
     id_cliente: int
-
-    class Config:
-        orm_mode = True
-
-# Esquema de Usuario
-class UsuarioBase(BaseModel):
-    id_rol: Optional[int]
-    username_usuario: Optional[str] = Field(None, max_length=50)
-    clave_usuario: Optional[str] = Field(None, max_length=100)
-    email_usuario: Optional[EmailStr]
-
-class UsuarioCreate(UsuarioBase):
-    id_rol: int
-    username_usuario: str
-    clave_usuario: str
-    email_usuario: EmailStr
-
-class UsuarioUpdate(UsuarioBase):
-    pass
-
-class Usuario(UsuarioBase):
-    id_usuario: int
-
-    class Config:
-        orm_mode = True
-        exclude = {'clave_usuario'}
-
-# Esquema de Rol
-class RolBase(BaseModel):
-    nombre_rol: Optional[str] = Field(None, max_length=50)
-    descripcion_rol: Optional[str] = Field(None, max_length=255)
-
-class RolCreate(RolBase):
-    pass
-
-class RolUpdate(RolBase):
-    pass
-
-class Rol(RolBase):
-    id_rol: int
 
     class Config:
         orm_mode = True
@@ -151,6 +159,14 @@ class PrendaCreate(PrendaBase):
 
 class PrendaUpdate(PrendaBase):
     pass
+
+class PrendaResponse(PrendaBase):
+    id_prenda: int
+    categoria: Categoria
+    marca: Marca
+
+    class Config:
+        orm_mode = True
 
 class Prenda(PrendaBase):
     id_prenda: int
