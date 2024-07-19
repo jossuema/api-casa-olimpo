@@ -92,22 +92,6 @@ class Cliente(ClienteBase):
     class Config:
         orm_mode = True
 
-# Esquema de Carrito
-class CarritoBase(BaseModel):
-    id_cliente: int
-
-class CarritoCreate(CarritoBase):
-    pass
-
-class CarritoUpdate(CarritoBase):
-    pass
-
-class Carrito(CarritoBase):
-    id_carrito: int
-
-    class Config:
-        orm_mode = True
-
 # Esquema de CarritoPrenda
 class CarritoPrendaBase(BaseModel):
     id_carrito: int
@@ -117,10 +101,41 @@ class CarritoPrendaBase(BaseModel):
 class CarritoPrendaCreate(CarritoPrendaBase):
     pass
 
+class CarritoPrendaC(BaseModel):
+    id_prenda: int
+    cantidad_carrito_prenda: int
+
 class CarritoPrendaUpdate(CarritoPrendaBase):
     pass
 
 class CarritoPrenda(CarritoPrendaBase):
+    class Config:
+        orm_mode = True
+
+# Esquema de Carrito
+class CarritoBase(BaseModel):
+    id_cliente: int
+
+class CarritoCreate(CarritoBase):
+    pass
+
+class CarritoC(BaseModel):
+    id_cliente: int
+    prendas: List[CarritoPrendaC]
+
+class CarritoUpdate(CarritoBase):
+    pass
+
+class CarritoResponse(CarritoBase):
+    id_carrito: int
+    prendas: List[CarritoPrenda]
+
+    class Config:
+        orm_mode = True
+
+class Carrito(CarritoBase):
+    id_carrito: int
+
     class Config:
         orm_mode = True
 

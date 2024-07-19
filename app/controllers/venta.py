@@ -1,12 +1,12 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app import schemas, models
 from typing import List
 
 def get_venta(db: Session, venta_id: int):
-    return db.query(models.Venta).filter(models.Venta.id_venta == venta_id).first()
+    return db.query(models.Venta).options(joinedload(models.Venta.detalle_ventas).joinedload(models.DetalleVenta.prenda)).filter(models.Venta.id_venta == venta_id).first()
 
 def get_ventas(db: Session, skip: int = 0, limit: int = 100) -> List[schemas.VentaResponse]:
-    return db.query(models.Venta)
+    return db.query(models.Venta).options(joinedload(models.Venta.detalle_ventas).joinedload(models.DetalleVenta.prenda)).offset(skip).limit(limit).all()
 
 def create_venta(db: Session, venta: schemas.VentaBase):
     db_venta = models.Venta(**venta.dict())

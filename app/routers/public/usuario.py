@@ -22,8 +22,9 @@ def create_user(user: schemas.UsuarioCreate, db: Session = Depends(get_db)):
     user.clave_usuario = hashed_password
     return controllers.create_usuario(db=db, usuario=user)
 
-@router.delete("/{id}", response_model=schemas.Usuario, description="Elimina un usuario", response_model_exclude=['clave_usuario'])
-def delete_user(id: int, db: Session = Depends(get_db), user: schemas.Usuario = Depends(get_current_user)):
+@router.delete("/", response_model=schemas.Usuario, description="Elimina un usuario", response_model_exclude=['clave_usuario'])
+def delete_user(db: Session = Depends(get_db), user: schemas.Usuario = Depends(get_current_user)):
+    id = user.id_usuario
     if user.id_usuario != id:
         raise HTTPException(status_code=403, detail="Insufficient privileges")
     db_user = controllers.get_usuario(db, id)
@@ -31,8 +32,9 @@ def delete_user(id: int, db: Session = Depends(get_db), user: schemas.Usuario = 
         raise HTTPException(status_code=404, detail="User not found")
     return controllers.delete_usuario(db, id)
 
-@router.put("/{id}", response_model=schemas.Usuario, description="Actualiza un usuario", response_model_exclude=['clave_usuario'])
-def update_user(id: int, user: schemas.UsuarioUpdate, db: Session = Depends(get_db), current_user: schemas.Usuario = Depends(get_current_user)):
+@router.put("/", response_model=schemas.Usuario, description="Actualiza un usuario", response_model_exclude=['clave_usuario'])
+def update_user(user: schemas.UsuarioUpdate, db: Session = Depends(get_db), current_user: schemas.Usuario = Depends(get_current_user)):
+    id = user.id_usuario
     if current_user.id_usuario != id:
         raise HTTPException(status_code=403, detail="Insufficient privileges")
     db_user = controllers.update_usuario(db, id, user)
@@ -40,8 +42,9 @@ def update_user(id: int, user: schemas.UsuarioUpdate, db: Session = Depends(get_
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
-@router.get("/{id}", response_model=schemas.Usuario, description="Obtiene un usuario", response_model_exclude=['clave_usuario'])
-def read_user(id: int, db: Session = Depends(get_db), user: schemas.Usuario = Depends(get_current_user)):
+@router.get("/", response_model=schemas.Usuario, description="Obtiene un usuario", response_model_exclude=['clave_usuario'])
+def read_user(db: Session = Depends(get_db), user: schemas.Usuario = Depends(get_current_user)):
+    id = user.id_usuario
     if user.id_usuario != id:
         raise HTTPException(status_code=403, detail="Insufficient privileges")
     db_user = controllers.get_usuario(db, id)

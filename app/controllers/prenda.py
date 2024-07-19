@@ -6,7 +6,7 @@ from app.models import Prenda, Categoria, Marca
 def get_prenda(db: Session, prenda_id: int):
     return db.query(Prenda).options(joinedload(Prenda.categoria), joinedload(Prenda.marca)).filter(Prenda.id_prenda == prenda_id).first()
 
-def get_prendas(db: Session, skip: int = 0, limit: int = 100):
+def get_prendas(db: Session, skip: int = 0, limit: int = 100) -> list[Prenda]:
     return db.query(Prenda).options(joinedload(Prenda.categoria), joinedload(Prenda.marca)).offset(skip).limit(limit).all()
 
 def get_prendas_by_categoria(db: Session, categoria_id: int, skip: int = 0, limit: int = 100):
