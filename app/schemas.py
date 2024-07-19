@@ -1,9 +1,8 @@
-# app/schemas.py
-
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, validator
 from typing import Optional, List
 from datetime import date
 from decimal import Decimal
+
 
 # Esquema de Rol
 class RolBase(BaseModel):
@@ -30,10 +29,7 @@ class UsuarioBase(BaseModel):
     email_usuario: Optional[EmailStr]
 
 class UsuarioCreate(UsuarioBase):
-    id_rol: int
-    username_usuario: str
-    clave_usuario: str
-    email_usuario: EmailStr
+    pass
 
 class UsuarioUpdate(UsuarioBase):
     pass
@@ -71,6 +67,25 @@ class ClienteCreate(ClienteBase):
 class ClienteUpdate(ClienteBase):
     pass
 
+class ClienteResponse(ClienteBase):
+    id_cliente: int
+    usuario_nombre: str
+    usuario_rol: str
+
+    @validator('usuario_nombre', 'usuario_rol', pre=True, always=True)
+    def get_usuario_info(cls, v, values, **kwargs):
+        # Intenta obtener el nombre del usuario y del rol desde el objeto usuario si está disponible
+        if 'usuario' in values:
+            usuario = values['usuario']
+            if 'usuario_nombre' in kwargs['field'].name and usuario:
+                return usuario.username_usuario
+            elif 'usuario_rol' in kwargs['field'].name and usuario:
+                return usuario.rol.nombre_rol
+        return v
+
+    class Config:
+        orm_mode = True
+        
 class Cliente(ClienteBase):
     id_cliente: int
 
@@ -177,12 +192,18 @@ class Prenda(PrendaBase):
 # Esquema de Venta
 class VentaBase(BaseModel):
     id_cliente: int
-    fecha_venta: Optional[date]
-    total_venta: Optional[Decimal]
-    metodo_pago_venta: Optional[str] = Field(None, max_length=50)
+    fecha_venta: date
+    total_venta: Decimal
+    metodo_pago_venta: str = Field(None, max_length=50)
 
-class VentaCreate(VentaBase):
-    pass
+class VentaBaseDetalleCreate(BaseModel):
+    id_prenda: int
+    cantidad_detalle_venta: Optional[int]
+
+class VentaCreate(BaseModel):
+    id_cliente: int
+    metodo_pago_venta: str = Field(None, max_length=50)
+    prendas: List[VentaBaseDetalleCreate]
 
 class VentaUpdate(VentaBase):
     pass
@@ -206,6 +227,24 @@ class DetalleVentaCreate(DetalleVentaBase):
 class DetalleVentaUpdate(DetalleVentaBase):
     pass
 
+class DetalleVentaResponse(BaseModel):
+    id_detalle_venta: int
+    id_venta: int
+    id_prenda: int
+    cantidad_detalle_venta: Optional[int]
+    total_detalle_venta: Optional[Decimal]
+    prenda: Prenda
+
+    class Config:
+        orm_mode = True
+
+class VentaResponse(VentaBase):
+    id_venta: int
+    fecha_venta: date
+    total_venta: Decimal
+    metodo_pago_venta: str = Field(None, max_length=50)
+    prendas: List[DetalleVentaResponse]
+    
 class DetalleVenta(DetalleVentaBase):
     id_detalle_venta: int
 

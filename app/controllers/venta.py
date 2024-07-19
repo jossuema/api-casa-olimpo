@@ -1,13 +1,14 @@
 from sqlalchemy.orm import Session
 from app import schemas, models
+from typing import List
 
 def get_venta(db: Session, venta_id: int):
     return db.query(models.Venta).filter(models.Venta.id_venta == venta_id).first()
 
-def get_ventas(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Venta).offset(skip).limit(limit).all()
+def get_ventas(db: Session, skip: int = 0, limit: int = 100) -> List[schemas.VentaResponse]:
+    return db.query(models.Venta)
 
-def create_venta(db: Session, venta: schemas.VentaCreate):
+def create_venta(db: Session, venta: schemas.VentaBase):
     db_venta = models.Venta(**venta.dict())
     db.add(db_venta)
     db.commit()

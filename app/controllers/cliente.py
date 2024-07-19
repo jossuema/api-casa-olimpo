@@ -1,11 +1,13 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app import schemas, models
+from app.models import Cliente, Usuario, Rol
 
-def get_cliente(db: Session, cliente_id: int):
-    return db.query(models.Cliente).filter(models.Cliente.id_cliente == cliente_id).first()
+def get_cliente(db: Session, cliente_id: int) -> schemas.ClienteResponse:
+    return db.query(models.Cliente).options(joinedload(Cliente.usuario).joinedload(Usuario.rol)).filter(models.Cliente.id_cliente == cliente_id).first()
 
-def get_clientes(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Cliente).offset(skip).limit(limit).all()
+def get_clientes(db: Session, skip: int = 0, limit: int = 100) -> list[schemas.ClienteResponse]:
+    clientes = db.query(models.Cliente).options(joinedload(Cliente.usuario).joinedload(Usuario.rol)).offset(skip).limit(limit).all()
+    return clientes
 
 def create_cliente(db: Session, cliente: schemas.ClienteCreate):
     db_cliente = models.Cliente(**cliente.dict())
