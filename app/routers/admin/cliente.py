@@ -18,7 +18,7 @@ def read_clientes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db))
 
 @router.get("/{cliente_id}", response_model=schemas.ClienteResponse)
 def read_cliente(cliente_id: int, db: Session = Depends(get_db)):
-    db_cliente = controllers.get_cliente(db, cliente_id=cliente_id)
+    db_cliente = controllers.get_cliente(db, cliente_id)
     if db_cliente is None:
         raise HTTPException(status_code=404, detail="Cliente not found")
     return db_cliente

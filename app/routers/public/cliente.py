@@ -8,11 +8,11 @@ from app.auth import get_current_user
 
 router = APIRouter()
 
-@router.post("/", response_model=schemas.Cliente)
+@router.post("/", response_model=schemas.ClienteResponse)
 def create_cliente(cliente: schemas.ClienteCreate, db: Session = Depends(get_db)):
     return controllers.create_cliente(db=db, cliente=cliente)
 
-@router.get("/", response_model=schemas.Cliente)
+@router.get("/", response_model=schemas.ClienteResponse)
 def read_cliente(db: Session = Depends(get_db), user: schemas.Usuario = Depends(get_current_user)):
     # Verifica que el cliente pertenezca al usuario antes de mostrarlo
     db_cliente = db.query(models.Cliente).filter(models.Cliente.id_usuario == user.id_usuario).first()
@@ -20,7 +20,7 @@ def read_cliente(db: Session = Depends(get_db), user: schemas.Usuario = Depends(
         raise HTTPException(status_code=404, detail="Cliente not found")
     return db_cliente
 
-@router.put("/", response_model=schemas.Cliente)
+@router.put("/", response_model=schemas.ClienteResponse)
 def update_cliente(cliente: schemas.ClienteUpdate, db: Session = Depends(get_db), user: schemas.Usuario = Depends(get_current_user)):
     # Verifica que el cliente a actualizar pertenezca al usuario
     db_cliente = db.query(models.Cliente).filter(models.Cliente.id_usuario == user.id_usuario).first()
@@ -28,7 +28,7 @@ def update_cliente(cliente: schemas.ClienteUpdate, db: Session = Depends(get_db)
         raise HTTPException(status_code=404, detail="Cliente not found")
     return controllers.update_cliente(db, user.id_usuario, cliente)
 
-@router.delete("/", response_model=schemas.Cliente)
+@router.delete("/", response_model=schemas.ClienteResponse)
 def delete_cliente(db: Session = Depends(get_db), user: schemas.Usuario = Depends(get_current_user)):
     # Verifica que el cliente a eliminar pertenezca al usuario
     db_cliente = db.query(models.Cliente).filter(models.Cliente.id_usuario == user.id_usuario).first()

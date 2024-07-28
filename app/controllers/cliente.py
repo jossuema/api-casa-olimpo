@@ -3,7 +3,11 @@ from app import schemas, models
 from app.models import Cliente, Usuario, Rol
 
 def get_cliente(db: Session, cliente_id: int) -> schemas.ClienteResponse:
-    return db.query(models.Cliente).options(joinedload(Cliente.usuario).joinedload(Usuario.rol)).filter(models.Cliente.id_cliente == cliente_id).first()
+    cliente = db.query(models.Cliente).options(joinedload(Cliente.usuario).joinedload(Usuario.rol)).filter(models.Cliente.id_cliente == cliente_id).first()
+    print(cliente)
+    print(cliente.usuario)
+    print(cliente.usuario.rol)
+    return cliente
 
 def get_clientes(db: Session, skip: int = 0, limit: int = 100) -> list[schemas.ClienteResponse]:
     clientes = db.query(models.Cliente).options(joinedload(Cliente.usuario).joinedload(Usuario.rol)).offset(skip).limit(limit).all()

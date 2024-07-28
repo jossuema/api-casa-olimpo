@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr, validator
+from pydantic import BaseModel, Field, EmailStr, validator, ValidationError
 from typing import Optional, List
 from datetime import date
 from decimal import Decimal
@@ -69,17 +69,17 @@ class ClienteUpdate(ClienteBase):
 
 class ClienteResponse(ClienteBase):
     id_cliente: int
-    usuario_nombre: str
-    usuario_rol: str
+    usuario: UsuarioResponse
+    usuario_nombre: Optional[str]
+    usuario_rol: Optional[str]
 
     @validator('usuario_nombre', 'usuario_rol', pre=True, always=True)
     def get_usuario_info(cls, v, values, **kwargs):
-        # Intenta obtener el nombre del usuario y del rol desde el objeto usuario si está disponible
-        if 'usuario' in values:
-            usuario = values['usuario']
-            if 'usuario_nombre' in kwargs['field'].name and usuario:
+        usuario = values.get('usuario')
+        if usuario:
+            if 'usuario_nombre' in kwargs['field'].name:
                 return usuario.username_usuario
-            elif 'usuario_rol' in kwargs['field'].name and usuario:
+            if 'usuario_rol' in kwargs['field'].name:
                 return usuario.rol.nombre_rol
         return v
 
