@@ -47,9 +47,9 @@ def read_venta(venta_id: int, db: Session = Depends(get_db)):
 
 @router.delete("/{venta_id}", response_model=schemas.VentaResponse)
 def delete_venta(venta_id: int, db: Session = Depends(get_db)):
-    db_venta = controllers.delete_venta(db, venta_id=venta_id)
+    db_venta = controllers.get_venta(db, venta_id=venta_id)
     if db_venta is None:
         raise HTTPException(status_code=404, detail="Venta not found")
     for detalle_venta in db_venta.detalle_ventas:
         controllers.delete_detalle_venta(db, detalle_venta.id_detalle_venta)
-    return db_venta
+    return controllers.delete_venta(db, venta_id)

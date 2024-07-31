@@ -259,7 +259,10 @@ class VentaResponse(VentaBase):
     total_venta: Decimal
     metodo_pago_venta: str = Field(None, max_length=50)
     prendas: List[DetalleVentaResponse]
-    
+
+    class Config:
+        orm_mode = True
+        
 class DetalleVenta(DetalleVentaBase):
     id_detalle_venta: int
 
