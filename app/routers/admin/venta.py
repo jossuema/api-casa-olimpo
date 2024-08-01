@@ -86,11 +86,11 @@ def read_venta(venta_id: int, db: Session = Depends(get_db)):
         venta.prendas.append(detalle_venta)
     return venta
 
-@router.delete("/{venta_id}", response_model=schemas.VentaResponse)
+@router.delete("/{venta_id}")
 def delete_venta(venta_id: int, db: Session = Depends(get_db)):
     db_venta = controllers.get_venta(db, venta_id=venta_id)
     if db_venta is None:
         raise HTTPException(status_code=404, detail="Venta not found")
     for detalle_venta in db_venta.detalle_ventas:
         controllers.delete_detalle_venta(db, detalle_venta.id_detalle_venta)
-    return controllers.delete_venta(db, venta_id)
+    return {"message": "Venta borrada"}
