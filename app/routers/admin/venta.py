@@ -93,4 +93,5 @@ def delete_venta(venta_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Venta not found")
     for detalle_venta in db_venta.detalle_ventas:
         controllers.delete_detalle_venta(db, detalle_venta.id_detalle_venta)
+    controllers.delete_venta(db, venta_id)
     return {"message": "Venta borrada"}
