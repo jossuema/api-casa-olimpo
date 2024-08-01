@@ -28,8 +28,10 @@ class UsuarioBase(BaseModel):
     clave_usuario: str = Field(None, max_length=200)
     email_usuario: Optional[EmailStr]
 
-class UsuarioCreate(UsuarioBase):
-    pass
+class UsuarioCreate(BaseModel):
+    username_usuario: Optional[str] = Field(None, max_length=50)
+    clave_usuario: str = Field(None, max_length=200)
+    email_usuario: Optional[EmailStr]
 
 class UsuarioUpdate(UsuarioBase):
     pass
@@ -211,6 +213,9 @@ class VentaBase(BaseModel):
     total_venta: Decimal
     metodo_pago_venta: str = Field(None, max_length=50)
 
+    class Config:
+        orm_mode = True
+
 class VentaBaseDetalleCreate(BaseModel):
     id_prenda: int
     cantidad_detalle_venta: Optional[int]
@@ -255,14 +260,11 @@ class DetalleVentaResponse(BaseModel):
 
 class VentaResponse(VentaBase):
     id_venta: int
-    fecha_venta: date
-    total_venta: Decimal
-    metodo_pago_venta: str = Field(None, max_length=50)
     prendas: List[DetalleVentaResponse]
 
     class Config:
         orm_mode = True
-        
+
 class DetalleVenta(DetalleVentaBase):
     id_detalle_venta: int
 
