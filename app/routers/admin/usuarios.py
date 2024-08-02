@@ -12,6 +12,7 @@ def create_user(user: schemas.UsuarioCreate, db: Session = Depends(get_db)):
     db_user = controllers.get_usuario_by_username(db, user.username_usuario)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
+    db_user = controllers.get_usuario_by_email(db, user.email_usuario)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     # Hashear la contraseña antes de guardarla en la base de datos
