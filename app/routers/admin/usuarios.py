@@ -7,7 +7,7 @@ from ...database import get_db
 router = APIRouter()
 
 @router.post("/", response_model=schemas.Usuario, status_code=status.HTTP_201_CREATED, description="Crea un nuevo usuario", response_model_exclude=['clave_usuario'])
-def create_user(user: schemas.UsuarioCreate, db: Session = Depends(get_db)):
+def create_user(user: schemas.UsuarioBase, db: Session = Depends(get_db)):
     # Verificar si el usuario ya existe
     db_user = controllers.get_usuario_by_username(db, user.username_usuario)
     if db_user:
