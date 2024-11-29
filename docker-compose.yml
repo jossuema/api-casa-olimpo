@@ -19,7 +19,7 @@ services:
     ports:
       - "8000:80"
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@{POSTGRES_IP}:5432/${POSTGRES_DB}
       - SECRET_KEY=${SECRET_KEY}
     depends_on:
       - postgres
