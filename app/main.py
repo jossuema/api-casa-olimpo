@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from . import auth, models, schemas
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -15,6 +17,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("uvicorn")
 
 app = FastAPI()
+
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 app.add_middleware(
     CORSMiddleware,
