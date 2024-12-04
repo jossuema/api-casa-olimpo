@@ -1,15 +1,18 @@
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, Request
 from app.routers import router
 from app.database import engine, SessionLocal, Base, get_db
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError
-import jwt
+import jwt, logging, time
 from sqlalchemy.orm import Session
 from datetime import timedelta
 from . import auth, models, schemas
 from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("uvicorn")
 
 app = FastAPI()
 
@@ -20,6 +23,23 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    # Registrar la solicitud
+    start_time = time.time()  # Para medir el tiempo de la solicitud
+    logger.info(f"Request: {request.method} {request.url}")
+
+    # Procesar la solicitud y obtener la respuesta
+    response = await call_next(request)
+
+    # Calcular el tiempo que tomó procesar la solicitud
+    process_time = time.time() - start_time
+
+    # Registrar la respuesta y el tiempo de procesamiento
+    logger.info(f"Response status code: {response.status_code} (Processed in {process_time:.4f} seconds)")
+
+    return response
 
 app.include_router(router)
 
