@@ -14,7 +14,7 @@ config = context.config
 fileConfig(config.config_file_name)
 
 # Obtener la URL de la base de datos de las variables de entorno
-database_url = os.getenv('DATABASE_URL')
+database_url = os.getenv('POSTGRES_URL')
 if database_url:
     config.set_main_option('sqlalchemy.url', database_url)
 
