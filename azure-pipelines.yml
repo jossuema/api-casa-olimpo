@@ -1,0 +1,62 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# Deploy the image to Azure Web App
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  # Conexión al registro de contenedores (service connection de Azure DevOps)
+  dockerRegistryServiceConnection: 'd73e605e-df31-4557-a35a-314d3e8c6a19'
+  imageRepository: 'api-casa-olimpo-fastapi'
+  containerRegistry: 'casaolimpo.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: 'latest'
+
+  # Configuración de despliegue
+  azureSubscription: 'casaolimpo'  # Nombre de la conexión de servicio a Azure
+  appName: 'apicasaolimpo'  # Nombre de la Web App en Azure
+  resourceGroup: 'utmach'  # Grupo de recursos donde está la Web App
+
+  # VM Agent
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+
+- stage: Deploy
+  displayName: Deploy to Azure Web App
+  dependsOn: Build
+  jobs:
+  - job: Deploy
+    displayName: Deploy container to Azure Web App
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: AzureWebAppContainer@1
+      displayName: Deploy Docker Image to Azure Web App
+      inputs:
+        azureSubscription: $(azureSubscription)
+        appName: $(appName)
+        resourceGroupName: $(resourceGroup)
+        deployToSlotOrASE: true
+        imageName: $(containerRegistry)/$(imageRepository):$(tag)
