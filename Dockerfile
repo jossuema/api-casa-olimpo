@@ -14,5 +14,8 @@ COPY . /code/
 # Exponer el puerto 80
 EXPOSE 80
 
-# Comando para ejecutar la aplicación usando Uvicorn y Alembic
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 80 --reload"]
+# Entrypoint para ejecutar Alembic
+ENTRYPOINT ["sh", "-c", "alembic upgrade head"]
+
+# Comando para ejecutar la API
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
