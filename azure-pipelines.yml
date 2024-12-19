@@ -17,8 +17,8 @@ variables:
   appName: 'apicasaolimpo'
   resourceGroup: 'utmach'
 
-  # VM Agent
-  vmImageName: 'ubuntu-latest'
+  # Agente autoservido
+  vmImageName: 'Default'  # Pool del agente autoservido
 
 stages:
 - stage: Build
@@ -27,7 +27,7 @@ stages:
   - job: Build
     displayName: Build
     pool:
-      vmImage: $(vmImageName)
+      name: Default
     steps:
     - task: Docker@2
       displayName: Build and push an image to container registry
@@ -46,7 +46,7 @@ stages:
   - job: Deploy
     displayName: Deploy container to Azure Web App
     pool:
-      vmImage: $(vmImageName)
+      name: Default  # Pool del agente autoservido
     steps:
     - task: AzureWebAppContainer@1
       displayName: Deploy Docker Image to Azure Web App
