@@ -20,9 +20,11 @@ services:
     ports:
       - "8000:80"
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_IP}:5432/${POSTGRES_DB}
+      - POSTGRES_URL=${POSTGRES_URL}
       - SECRET_KEY=${SECRET_KEY}
     depends_on:
       - postgres
+    entrypoint: >
+      sh -c "alembic upgrade head"
     command: >
-      sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 80 --reload"
+      sh -c "uvicorn app.main:app --host 0.0.0.0 --port 80 --reload"

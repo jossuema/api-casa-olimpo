@@ -4,6 +4,12 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
+from dotenv import load_dotenv
+
+print(f"ENV: {os.getenv('ENV')}")
+
+if os.getenv("ENV") == "dev":
+    load_dotenv(dotenv_path="../.env")
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -15,6 +21,12 @@ fileConfig(config.config_file_name)
 
 # Obtener la URL de la base de datos de las variables de entorno
 database_url = os.getenv('POSTGRES_URL')
+
+print(f"POSTGRES_URL: {database_url}")
+
+if not database_url:
+    raise Exception("No se ha encontrado la variable de entorno POSTGRES_URL")
+
 if database_url:
     config.set_main_option('sqlalchemy.url', database_url)
 
