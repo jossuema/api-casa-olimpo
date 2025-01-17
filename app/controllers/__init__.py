@@ -1,4 +1,4 @@
-from .cliente import get_cliente, get_clientes, create_cliente, update_cliente, delete_cliente
+from .cliente import get_cliente, get_clientes, create_cliente, update_cliente, delete_cliente, get_cliente_by_user
 from .carrito_prenda import get_carrito_prenda, get_carrito_prendas, create_carrito_prenda, delete_carrito_prendas, delete_carrito_prenda
 from .carrito import get_carrito, get_carritos, create_carrito, update_carrito, delete_carrito, get_carrito_by_cliente
 from .categoria import get_categoria, get_categorias, create_categoria, update_categoria, delete_categoria

@@ -14,7 +14,7 @@ from .public.categoria import router as categoria_router_public
 from .public.marca import router as marca_router_public
 from .public.carrito import router as carrito_router_public
 
-from app.auth import get_current_admin_user
+from app.auth import get_current_admin_user, get_current_user
 # Importa otros routers de manera similar
 
 router = APIRouter()
@@ -25,7 +25,7 @@ admin_router = APIRouter(prefix="/api/admin", tags=["admin"], dependencies=[Depe
 public_router.include_router(usuario_router_public, tags=["usuarios"], prefix="/usuarios")
 public_router.include_router(prenda_router_public, tags=["prendas"], prefix="/prendas")
 public_router.include_router(cliente_router_public, tags=["clientes"], prefix="/clientes")
-public_router.include_router(venta_router_public, tags=["ventas"], prefix="/ventas")
+public_router.include_router(venta_router_public, tags=["ventas"], prefix="/ventas", dependencies=[Depends(get_current_user)])
 public_router.include_router(categoria_router_public, tags=["categorias"], prefix="/categorias")
 public_router.include_router(marca_router_public, tags=["marcas"], prefix="/marcas")
 public_router.include_router(carrito_router_public, tags=["carrito"], prefix="/carrito")

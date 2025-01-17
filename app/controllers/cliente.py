@@ -9,6 +9,10 @@ def get_cliente(db: Session, cliente_id: int) -> schemas.ClienteResponse:
     print(cliente.usuario.rol)
     return cliente
 
+def get_cliente_by_user(db: Session, user_id: int) -> schemas.ClienteResponse:
+    cliente = db.query(models.Cliente).options(joinedload(Cliente.usuario).joinedload(Usuario.rol)).filter(models.Cliente.id_usuario == user_id).first()
+    return cliente
+
 def get_clientes(db: Session, skip: int = 0, limit: int = 100) -> list[schemas.ClienteResponse]:
     clientes = db.query(models.Cliente).options(joinedload(Cliente.usuario).joinedload(Usuario.rol)).offset(skip).limit(limit).all()
     return clientes

@@ -83,6 +83,7 @@ class Prenda(Base):
     talla_prenda = Column(String(10))
     color_prenda = Column(String(30))
     precio_prenda = Column(Numeric)
+    stock_prenda = Column(Integer, default=0)
     img_prenda = Column(Text)
 
     categoria = relationship("Categoria", back_populates="prendas")

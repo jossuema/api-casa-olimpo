@@ -30,6 +30,7 @@ def create_venta(venta: schemas.VentaCreate, db: Session = Depends(get_db)):
             cantidad_detalle_venta=prenda.cantidad_detalle_venta,
             total_detalle_venta=prenda_db.precio_prenda * prenda.cantidad_detalle_venta
         )
+        controllers.update_prenda(db, prenda.id_prenda, prenda_db.stock_prenda - prenda.cantidad_detalle_venta)
         controllers.create_detalle_venta(db=db, detalle_venta=detalle_venta)
     return db_venta
 
