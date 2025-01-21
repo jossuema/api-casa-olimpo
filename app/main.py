@@ -10,9 +10,6 @@ from . import auth, models, schemas
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-
-
-
 Base.metadata.create_all(bind=engine)
 
 logging.basicConfig(level=logging.INFO)

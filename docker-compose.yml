@@ -1,16 +1,5 @@
 version: '3.8'  
-services:  
-  postgres:  
-    container_name: pg_casaolimpo  
-    image: postgres  
-    restart: always  
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
-      POSTGRES_IP: ${POSTGRES_IP}
-    ports:  
-      - "5434:5432"
+services:
   fastapi:
     build: .
     volumes:
@@ -22,9 +11,10 @@ services:
     environment:
       - POSTGRES_URL=${POSTGRES_URL}
       - SECRET_KEY=${SECRET_KEY}
-    depends_on:
-      - postgres
-    entrypoint: >
-      sh -c "alembic upgrade head"
+      - ENV=${ENV}
+      - AZURE_STORAGE_ACCOUNT_NAME=${AZURE_STORAGE_ACCOUNT_NAME}
+      - AZURE_STORAGE_CONTAINER=${AZURE_STORAGE_CONTAINER}
+      - AZURE_SAS_READ=${AZURE_SAS_READ}
+      - AZURE_SAS_WRITE=${AZURE_SAS_WRITE}
     command: >
-      sh -c "uvicorn app.main:app --host 0.0.0.0 --port 80 --reload"
+      sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 80 --reload"

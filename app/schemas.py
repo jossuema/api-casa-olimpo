@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, EmailStr, validator, ValidationError
 from typing import Optional, List
 from datetime import date
 from decimal import Decimal
-
+from app.utils import generate_img_url
 
 # Esquema de Rol
 class RolBase(BaseModel):
@@ -14,7 +14,7 @@ class RolCreate(RolBase):
 
 class RolUpdate(RolBase):
     pass
-
+0
 class Rol(RolBase):
     id_rol: int
 
@@ -185,8 +185,7 @@ class PrendaBase(BaseModel):
     color_prenda: Optional[str] = Field(None, max_length=30)
     precio_prenda: Optional[Decimal]
     stock_prenda: Optional[int] = Field(default=0)
-    img_prenda: Optional[str]
-
+    img_prenda: Optional[str] = Field(None, max_length=255)
 class PrendaCreate(PrendaBase):
     pass
 
@@ -203,6 +202,10 @@ class PrendaResponse(PrendaBase):
 
 class Prenda(PrendaBase):
     id_prenda: int
+
+    @validator('img_prenda', pre=True, always=True)
+    def get_img_url(cls, v):
+        return generate_img_url(v)
 
     class Config:
         orm_mode = True
