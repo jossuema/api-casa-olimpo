@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Numeric, Text, Date
+from sqlalchemy import Column, Integer, String, ForeignKey, Numeric, Text, Date, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+import datetime, random
 
 Base = declarative_base()
 
@@ -28,9 +29,15 @@ class Usuario(Base):
     username_usuario = Column(String(50))
     clave_usuario = Column(String(200))
     email_usuario = Column(String(100))
+    two_fa_code = Column(String(6), nullable=True)
+    two_fa_expiration = Column(DateTime, nullable=True)
 
     rol = relationship("Rol", back_populates="usuarios")
     cliente = relationship("Cliente", back_populates="usuario", uselist=False)
+
+    def generate_2fa_code(self):
+        self.two_fa_code = f"{random.randint(100000, 999999)}"
+        self.two_fa_expiration = datetime.datetime.utcnow() + datetime.timedelta(minutes=20)
 
 class Rol(Base):
     __tablename__ = 'rol'

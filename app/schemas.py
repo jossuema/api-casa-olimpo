@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr, validator, ValidationError
 from typing import Optional, List
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 from app.utils import generate_img_url
 
@@ -14,7 +14,7 @@ class RolCreate(RolBase):
 
 class RolUpdate(RolBase):
     pass
-0
+
 class Rol(RolBase):
     id_rol: int
 
@@ -27,6 +27,8 @@ class UsuarioBase(BaseModel):
     username_usuario: Optional[str] = Field(None, max_length=50)
     clave_usuario: str = Field(None, max_length=200)
     email_usuario: Optional[EmailStr]
+    two_fa_code: Optional[str]
+    two_fa_expiration: Optional[datetime]
 
 class UsuarioCreate(BaseModel):
     username_usuario: Optional[str] = Field(None, max_length=50)

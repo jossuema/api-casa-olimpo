@@ -8,7 +8,7 @@ import os
 DATABASE_URL = POSTGRES_URL
 
 # Crear el motor de la base de datos
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 
 # Crear la sesión local
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
