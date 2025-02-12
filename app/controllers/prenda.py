@@ -39,6 +39,13 @@ def update_prenda(db: Session, prenda_id: int, prenda: schemas.PrendaUpdate):
     db.refresh(db_prenda)
     return db_prenda
 
+def update_prenda_stock(db: Session, prenda_id: int, new_stock: int):
+    prenda_db = db.query(Prenda).filter(Prenda.id_prenda == prenda_id).first()
+    prenda_db.stock_prenda = new_stock
+    db.commit()
+    db.refresh(prenda_db)
+    return prenda_db
+
 def delete_prenda(db: Session, prenda_id: int):
     db_prenda = get_prenda(db, prenda_id)
     if db_prenda:

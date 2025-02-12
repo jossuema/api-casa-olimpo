@@ -16,12 +16,16 @@ def create_venta(venta: schemas.VentaCreate, db: Session = Depends(get_db)):
         metodo_pago_venta=venta.metodo_pago_venta,
         total_venta=0
     )
+
     for prenda in venta.prendas:
         prenda_db = controllers.get_prenda(db, prenda.id_prenda)
         if prenda_db is None:
             raise HTTPException(status_code=404, detail="Prenda not found")
         venta_db.total_venta += prenda_db.precio_prenda * prenda.cantidad_detalle_venta
+
     db_venta = controllers.create_venta(db=db, venta=venta_db)
+    print(db_venta)
+
     for prenda in venta.prendas:
         prenda_db = controllers.get_prenda(db, prenda.id_prenda)
         detalle_venta = schemas.DetalleVentaCreate(
@@ -30,8 +34,9 @@ def create_venta(venta: schemas.VentaCreate, db: Session = Depends(get_db)):
             cantidad_detalle_venta=prenda.cantidad_detalle_venta,
             total_detalle_venta=prenda_db.precio_prenda * prenda.cantidad_detalle_venta
         )
-        controllers.update_prenda(db, prenda.id_prenda, prenda_db.stock_prenda - prenda.cantidad_detalle_venta)
+        controllers.update_prenda_stock(db, prenda.id_prenda, prenda_db.stock_prenda - prenda.cantidad_detalle_venta)
         controllers.create_detalle_venta(db=db, detalle_venta=detalle_venta)
+    
     return db_venta
 
 @router.get("/", response_model=List[schemas.VentaResponse])
