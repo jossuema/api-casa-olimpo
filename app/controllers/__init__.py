@@ -67,5 +67,5 @@ __all__ = [
     "get_prendas_by_categoria_marca",
     "get_prendas_by_color",
     "get_carrito_by_cliente",
-    "update_prenda_stock",
+    "update_prenda_stock"
 ]

@@ -187,7 +187,7 @@ class PrendaBase(BaseModel):
     color_prenda: Optional[str] = Field(None, max_length=30)
     precio_prenda: Optional[Decimal]
     stock_prenda: Optional[int] = Field(default=0)
-    img_prenda: Optional[str] = Field(None, max_length=255)
+    img_prenda: Optional[str] = Field(None, max_length=1024)
 class PrendaCreate(PrendaBase):
     pass
 
